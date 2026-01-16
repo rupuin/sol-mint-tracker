@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 
-import { HeliusService } from "./src/services/helius.ts";
+import { HeliusService } from "./src/services/helius/client.ts";
 import { LaunchLab } from "./src/programs/LaunchLab.ts";
 import { PumpFun } from "./src/programs/PumpFun.ts";
 
@@ -18,7 +18,7 @@ const launchLab = new LaunchLab();
 const bonkTracker = new HeliusService(apiKey, [launchLab]);
 // const pumpFunTracker = new HeliusService(apiKey, [pumpFun]);
 
-bonkTracker.startTracking().catch((err) => {
+bonkTracker.startTracking().catch((err: any) => {
   console.error("💥 Fatal Error in tracker:", err);
   process.exit(1);
 });
