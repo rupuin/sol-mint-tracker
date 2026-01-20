@@ -1,35 +1,26 @@
-export type EventName = (typeof Events)[keyof typeof Events];
+import type { Token } from "./providers/index.ts";
 
-export const Events = {
-  // domain
-  MINT_DETECTED: "mintDetected",
-  TOKEN_DISCOVERED: "tokenDiscovered",
-  DISCOVERY_FAILED: "discoveryFailed", // where used?
+export type MintEvent = MintDetectedEvent | MintEnrichedEvent | MintErrorEvent;
 
-  // infra
-  SUBSCRIPTION_ERROR: "subscriptionError",
-  LOG_PROCESSING_ERROR: "logProcessingError",
-} as const;
+export type DomainErrorContext = "detection" | "enrichment";
 
-// success events
-interface BaseEvent {
-  program: string;
+export interface MintDetectedEvent {
+  launchpad: string;
+  signature: string;
   timestamp: number;
 }
 
-export interface MintDetectedEvent extends BaseEvent {
+export interface MintEnrichedEvent {
+  launchpad: string;
   signature: string;
+  token: Token;
+  timestamp: number;
 }
 
-// error events
-interface BaseErrorEvent {
-  program: string;
+export interface MintErrorEvent {
+  context: DomainErrorContext;
+  launchpad: string;
+  signature?: string;
   error: Error;
   timestamp: number;
-}
-
-export interface SubscriptionErrorEvent extends BaseErrorEvent {}
-
-export interface LogProcessingErrorEvent extends BaseErrorEvent {
-  signature?: string;
 }
