@@ -1,18 +1,11 @@
-import type { HeliusClient } from "helius-sdk";
+import { createHelius, type HeliusClient } from "helius-sdk";
 import type { TokenFetcher, Token } from "../types.ts";
 
-/**
- * Helius implementation of TokenFetcher
- */
 export class HeliusTokenFetcher implements TokenFetcher {
   private client: HeliusClient;
-  public mintsFoundCounter: number;
-  public mintsFetchedCounter: number;
 
   constructor(client: HeliusClient) {
     this.client = client;
-    this.mintsFoundCounter = 0;
-    this.mintsFetchedCounter = 0;
   }
 
   async fetchBySignature(signature: string): Promise<Token | null> {
@@ -25,11 +18,9 @@ export class HeliusTokenFetcher implements TokenFetcher {
     }
 
     console.log("[HeliusTokenFetcher] Found mint:", mint);
-    this.mintsFoundCounter++;
 
     await this.waitForIndexing();
-    const token = await this.fetchTokenMetadata(mint);
-    return token;
+    return this.fetchTokenMetadata(mint);
   }
 
   private async waitForIndexing(): Promise<void> {
@@ -42,8 +33,7 @@ export class HeliusTokenFetcher implements TokenFetcher {
     const txs = await this.client.enhanced.getTransactions({
       transactions: [signature],
     });
-
-    return txs[0].tokenTransfers[0].mint;
+    return txs[0]?.tokenTransfers[0]?.mint ?? null;
   }
 
   private async fetchTokenMetadata(mint: string): Promise<Token | null> {
@@ -54,7 +44,6 @@ export class HeliusTokenFetcher implements TokenFetcher {
       return null;
     }
 
-    this.mintsFetchedCounter++;
     return {
       mint: asset.id,
       name: asset.content?.metadata?.name ?? "Unknown",

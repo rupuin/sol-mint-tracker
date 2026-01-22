@@ -1,34 +1,14 @@
-import EventEmitter from "events";
+import { EventEmitter } from "events";
 import type { HeliusClient } from "helius-sdk";
 import type {
-  LogStreamer,
   LogStream,
-  StreamOptions,
   LogSource,
-  RawLogEvent,
-  StreamErrorEvent,
+  LogReceived,
+  StreamFailed,
   Commitment,
 } from "../types.ts";
 
-/**
- * Helius client implementation of LogStreamer factory
- */
-export class HeliusLogStreamer implements LogStreamer {
-  private client: HeliusClient;
-
-  constructor(client: HeliusClient) {
-    this.client = client;
-  }
-
-  createStream(opts: StreamOptions): LogStream {
-    return new HeliusLogStream(this.client, opts.sources, opts.commitment);
-  }
-}
-
-/**
- * Helius client implementation of LogStream connection
- */
-class HeliusLogStream extends EventEmitter implements LogStream {
+export class HeliusLogStream extends EventEmitter implements LogStream {
   private client: HeliusClient;
   private sources: LogSource[];
   private commitment: Commitment;
@@ -49,7 +29,7 @@ class HeliusLogStream extends EventEmitter implements LogStream {
     console.log(`[HeliusLogStream] Starting (${this.commitment})`);
 
     const results = await Promise.allSettled(
-      this.sources.map((account) => this.subscribeToSource(account)),
+      this.sources.map((source) => this.subscribeToSource(source)),
     );
 
     const failed = results.filter((r) => r.status === "rejected").length;
@@ -62,20 +42,10 @@ class HeliusLogStream extends EventEmitter implements LogStream {
 
   stop(): void {
     console.log("[HeliusLogStream] Stopping all subscriptions");
-    for (const [id, controller] of this.abortControllers.entries()) {
+    for (const controller of this.abortControllers.values()) {
       controller.abort();
-      console.log(`[HeliusLogStream] Stopped: ${id}`);
     }
     this.abortControllers.clear();
-  }
-
-  stopFor(sourceName: string): void {
-    const controller = this.abortControllers.get(sourceName);
-    if (!controller) return;
-
-    controller.abort();
-    this.abortControllers.delete(sourceName);
-    console.log(`[HeliusLogStream] Stopped: ${sourceName}`);
   }
 
   private async subscribeToSource(source: LogSource): Promise<void> {
@@ -90,9 +60,13 @@ class HeliusLogStream extends EventEmitter implements LogStream {
 
     try {
       await this.consumeStream(stream, source);
-    } catch (err: any) {
-      if (err?.name === "AbortError") return;
-      this.emitError("stream", err, source);
+    } catch (err: unknown) {
+      if (err instanceof Error && err.name === "AbortError") return;
+      this.emitError(
+        "stream",
+        err instanceof Error ? err : new Error(String(err)),
+        source,
+      );
     }
   }
 
@@ -113,33 +87,31 @@ class HeliusLogStream extends EventEmitter implements LogStream {
     source: LogSource,
   ): Promise<void> {
     for await (const notification of stream) {
-      const log = (notification as any).value ?? notification;
+      const log = (notification as { value?: unknown }).value ?? notification;
       this.emitLog(source, log);
     }
   }
 
   private emitLog(source: LogSource, rawLog: unknown): void {
-    const event: RawLogEvent = {
+    const event: LogReceived = {
       source,
-      signature: (rawLog as any).signature,
-      logs: (rawLog as any).logs ?? [],
+      signature: (rawLog as { signature: string }).signature,
+      logs: (rawLog as { logs?: string[] }).logs ?? [],
       timestamp: Date.now(),
     };
     this.emit("log", event);
   }
 
   private emitError(
-    context: StreamErrorEvent["context"],
+    context: StreamFailed["context"],
     error: Error,
     source: LogSource,
-    signature?: string,
   ): void {
-    const event: StreamErrorEvent = {
+    const event: StreamFailed = {
       context,
       source,
       error,
       timestamp: Date.now(),
-      ...(signature !== undefined && { signature }),
     };
     this.emit("error", event);
   }
