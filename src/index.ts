@@ -1,18 +1,13 @@
 // Program configuration
-export type { LaunchpadRegistry } from "./launchpads.ts";
+export type { LaunchpadRegistry } from "./launchpad.ts";
 
 // Events
 export type {
-  MintEvent,
-  MintDetectedEvent,
-  MintEnrichedEvent,
-  MintErrorEvent,
+  MintDetected,
+  MintEnriched,
+  DetectionFailed,
+  EnrichmentFailed,
 } from "./events.ts";
 
-// Detection
 export { MintDetector } from "./mint-detector.ts";
-export type { MintDetection } from "./mint-detector.ts";
-
-// Discovery orchestration
 export { MintEnricher } from "./mint-enricher.ts";
-export type { MintEnricherDeps } from "./mint-enricher.ts";

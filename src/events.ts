@@ -1,26 +1,29 @@
 import type { Token } from "./providers/index.ts";
 
-export type MintEvent = MintDetectedEvent | MintEnrichedEvent | MintErrorEvent;
-
-export type DomainErrorContext = "detection" | "enrichment";
-
-export interface MintDetectedEvent {
+// Success Events
+export interface MintDetected {
   launchpad: string;
   signature: string;
   timestamp: number;
 }
 
-export interface MintEnrichedEvent {
+export interface MintEnriched {
   launchpad: string;
   signature: string;
   token: Token;
   timestamp: number;
 }
 
-export interface MintErrorEvent {
-  context: DomainErrorContext;
+// Failure Events
+export interface DetectionFailed {
   launchpad: string;
-  signature?: string;
+  error: Error;
+  timestamp: number;
+}
+
+export interface EnrichmentFailed {
+  launchpad: string;
+  signature: string;
   error: Error;
   timestamp: number;
 }
