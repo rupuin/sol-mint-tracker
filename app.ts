@@ -1,16 +1,16 @@
 import dotenv from "dotenv";
-
-import { providers } from "./src/providers/index.ts";
-import { Launchpad, LaunchpadRegistry } from "./src/launchpads.ts";
-import { MintDetector, MintEnricher, type MintEvent } from "./src/index.ts";
+import { createHeliusProvider } from "./src/providers/index.ts";
+import { Launchpad, LaunchpadRegistry } from "./src/launchpad.ts";
+import { MintDetector, MintEnricher } from "./src/index.ts";
 
 dotenv.config();
 
 const apiKey = process.env.HELIUS_API_KEY;
-
 if (!apiKey) {
   throw new Error("HELIUS_API_KEY not found in environment");
 }
+
+const helius = createHeliusProvider(apiKey);
 
 const launchpads = new LaunchpadRegistry();
 launchpads.add(
@@ -28,19 +28,17 @@ launchpads.add(
   ),
 );
 
-const logStreamer = providers.createLogStreamer("helius", { apiKey });
-const tokenFetcher = providers.createTokenFetcher("helius", { apiKey });
-
-const logStream = logStreamer.createStream({
+const logStream = helius.createLogStream({
   sources: launchpads.all(),
   commitment: "confirmed",
 });
+const tokenFetcher = helius.createTokenFetcher();
 
 const detector = new MintDetector(launchpads.all());
 const enricher = new MintEnricher(tokenFetcher);
 
-detector.attachTo(logStream);
-enricher.attachTo(detector);
+detector.listenTo(logStream);
+enricher.listenTo(detector);
 
 detector.on("detected", (e) => console.log("Detected:", e.signature));
 detector.on("error", (e) => console.error(e));
@@ -48,5 +46,5 @@ enricher.on("enriched", (e) =>
   console.log("Enriched:", JSON.stringify(e.token, null, 2)),
 );
 enricher.on("error", (e) => console.error(e));
-console.log("******************************************************");
+
 logStream.start();
