@@ -1,4 +1,4 @@
-import { createHelius, type HeliusClient } from "helius-sdk";
+import type { HeliusClient } from "helius-sdk";
 import type { Token, TokenFetcher } from "../types.ts";
 
 export class HeliusTokenFetcher implements TokenFetcher {
@@ -33,7 +33,7 @@ export class HeliusTokenFetcher implements TokenFetcher {
 		const txs = await this.client.enhanced.getTransactions({
 			transactions: [signature],
 		});
-		return txs[0]?.tokenTransfers[0]?.mint ?? null;
+		return txs[0]?.tokenTransfers?.[0]?.mint ?? null;
 	}
 
 	private async fetchTokenMetadata(mint: string): Promise<Token | null> {

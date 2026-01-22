@@ -5,9 +5,11 @@ import type {
 	StreamFailed,
 } from "../../../src/providers/types.ts";
 
+// biome-ignore-start lint/suspicious/noExplicitAny: test mock
 function mockHeliusClient() {
 	return { ws: { logsNotifications: vi.fn() } } as any;
 }
+// biome-ignore-end lint/suspicious/noExplicitAny: test mock
 
 function createMockSubscription(events: unknown[]) {
 	return {
