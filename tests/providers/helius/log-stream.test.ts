@@ -6,7 +6,7 @@ import type {
 } from "../../../src/providers/types.ts";
 
 function mockHeliusClient() {
-	return { ws: { logsNotifications: vi.fn() } };
+	return { ws: { logsNotifications: vi.fn() } } as any;
 }
 
 function createMockSubscription(events: unknown[]) {
