@@ -4,11 +4,11 @@ import { HeliusLogStream } from "./log-stream.ts";
 import { HeliusTokenFetcher } from "./token-fetcher.ts";
 
 export function createHeliusProvider(apiKey: string): Provider {
-  const client = createHelius({ apiKey });
+	const client = createHelius({ apiKey });
 
-  return {
-    createLogStream: (opts: LogStreamOptions) =>
-      new HeliusLogStream(client, opts.sources, opts.commitment),
-    createTokenFetcher: () => new HeliusTokenFetcher(client),
-  };
+	return {
+		createLogStream: (opts: LogStreamOptions) =>
+			new HeliusLogStream(client, opts.sources, opts.commitment),
+		createTokenFetcher: () => new HeliusTokenFetcher(client),
+	};
 }
