@@ -1,5 +1,3 @@
-// Program configuration
-
 // Events
 export type {
 	DetectionFailed,
@@ -7,7 +5,7 @@ export type {
 	MintDetected,
 	MintEnriched,
 } from "./events.ts";
-export type { LaunchpadRegistry } from "./launchpad.ts";
 
+export type { LaunchpadRegistry } from "./launchpad-registry.ts";
 export { MintDetector } from "./mint-detector.ts";
 export { MintEnricher } from "./mint-enricher.ts";

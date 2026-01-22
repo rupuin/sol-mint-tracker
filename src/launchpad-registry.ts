@@ -1,7 +1,7 @@
 import type { LogSource } from "./providers/index.ts";
 
 /**
- * Program configuration with mint detection pattern
+ * Launchpad configuration with mint detection pattern
  */
 export class Launchpad implements LogSource {
 	constructor(
@@ -14,16 +14,20 @@ export class Launchpad implements LogSource {
 export class LaunchpadRegistry {
 	private launchpads = new Map<string, Launchpad>();
 
-	public add(launchpad: Launchpad): this {
+	add(launchpad: Launchpad): this {
 		this.launchpads.set(launchpad.name, launchpad);
 		return this;
 	}
 
-	public remove(name: string): boolean {
+	remove(name: string): boolean {
 		return this.launchpads.delete(name);
 	}
 
-	public all(): Launchpad[] {
+	getByName(name: string): Launchpad | null {
+		return this.launchpads.get(name) ?? null;
+	}
+
+	all(): Launchpad[] {
 		return Array.from(this.launchpads.values());
 	}
 }
