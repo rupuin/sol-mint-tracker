@@ -1,15 +1,15 @@
 // Types
-export type {
-  Commitment,
-  LogSource,
-  Token,
-  LogStream,
-  LogStreamOptions,
-  LogReceived,
-  StreamFailed,
-  TokenFetcher,
-  Provider,
-} from "./types.ts";
 
 // Providers
 export * from "./helius/index.ts";
+export type {
+	Commitment,
+	LogReceived,
+	LogSource,
+	LogStream,
+	LogStreamOptions,
+	Provider,
+	StreamFailed,
+	Token,
+	TokenFetcher,
+} from "./types.ts";
