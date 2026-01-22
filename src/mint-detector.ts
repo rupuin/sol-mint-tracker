@@ -1,29 +1,14 @@
 import { EventEmitter } from "events";
 import type {
   LogStream,
-  RawLogEvent,
-  StreamErrorEvent,
+  LogReceived,
+  StreamFailed,
 } from "./providers/index.ts";
-import type { Launchpad } from "./launchpads.ts";
-import type { MintDetectedEvent, MintErrorEvent } from "./events.ts";
+import type { Launchpad } from "./launchpad.ts";
+import type { MintDetected, DetectionFailed } from "./events.ts";
+import type { MintDetectionEmitter } from "./interfaces.ts";
 
-/**
- * Detects new mints from raw log events using launchpad-specific patterns
- */
-export class MintDetector extends EventEmitter {
-  on(e: "detected", listener: (e: MintDetectedEvent) => void): this;
-  on(e: "error", listener: (e: MintErrorEvent) => void): this;
-  on(e: string, listener: (...args: any[]) => void): this {
-    return super.on(e, listener);
-  }
-
-  // Optional: overload emit too
-  // emit(event: "detected", payload: MintDetectedEvent): boolean;
-  // emit(event: "error", payload: MintErrorEvent): boolean;
-  // emit(event: string, ...args: any[]): boolean {
-  //   return super.emit(event, ...args);
-  // }
-
+export class MintDetector extends EventEmitter implements MintDetectionEmitter {
   private launchpads: Map<string, Launchpad>;
 
   constructor(launchpads: Launchpad[]) {
@@ -31,37 +16,32 @@ export class MintDetector extends EventEmitter {
     this.launchpads = new Map(launchpads.map((l) => [l.name, l]));
   }
 
-  public attachTo(logStream: LogStream): void {
+  listenTo(logStream: LogStream): void {
     logStream.on("log", (e) => this.handleLog(e));
     logStream.on("error", (e) => this.handleError(e));
   }
 
-  private handleLog(e: RawLogEvent): void {
+  private handleLog(e: LogReceived): void {
     const launchpad = this.launchpads.get(e.source.name);
+    if (!launchpad) return;
 
-    if (!launchpad) return; // TODO: err handling
     if (this.isMint(e.logs, launchpad.mintInstruction)) {
       this.emit("detected", {
         launchpad: e.source.name,
         signature: e.signature,
         timestamp: e.timestamp,
-      } satisfies MintDetectedEvent);
+      } satisfies MintDetected);
     }
   }
 
-  private handleError(e: StreamErrorEvent): void {
+  private handleError(e: StreamFailed): void {
     this.emit("error", {
-      context: "detection",
       launchpad: e.source.name,
       error: e.error,
       timestamp: e.timestamp,
-      ...(e.signature !== undefined && { signature: e.signature }),
-    } satisfies MintErrorEvent);
+    } satisfies DetectionFailed);
   }
 
-  /**
-   * Checks if program logs contain the mint instruction pattern
-   */
   private isMint(logs: string[], mintInstruction: string): boolean {
     return logs.some((line) => line.includes(mintInstruction));
   }
