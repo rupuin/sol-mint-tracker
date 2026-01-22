@@ -1,4 +1,4 @@
-import { EventEmitter } from "events";
+import { EventEmitter } from "node:events";
 import { beforeEach, describe, expect, it } from "vitest";
 import type { DetectionFailed, MintDetected } from "../src/events.ts";
 import { Launchpad } from "../src/launchpad.ts";

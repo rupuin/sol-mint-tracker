@@ -1,4 +1,4 @@
-import { EventEmitter } from "events";
+import { EventEmitter } from "node:events";
 import type { EnrichmentFailed, MintDetected, MintEnriched } from "./events.ts";
 import type {
 	MintDetectionEmitter,
