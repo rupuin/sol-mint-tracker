@@ -1,38 +1,16 @@
-import type { Token } from "../types.ts";
+import type { LogReceived, LogSource, StreamFailed, Token } from "../types.ts";
 
-// Re-export Token for provider implementations
-export type { Token };
+// Re-export shared contracts for provider implementations
+export type { LogReceived, LogSource, StreamFailed, Token };
 
 // ============================================
-// Shared Types
+// Provider-specific Types
 // ============================================
 export type Commitment = "processed" | "confirmed" | "finalized";
 
-export interface LogSource {
-	readonly name: string;
-	readonly address: string;
-}
-
-// ============================================
-// Log Stream
-// ============================================
 export interface LogStreamOptions {
 	sources: LogSource[];
 	commitment: Commitment;
-}
-
-export interface LogReceived {
-	source: LogSource;
-	signature: string;
-	logs: string[];
-	timestamp: number;
-}
-
-export interface StreamFailed {
-	context: "subscription" | "stream";
-	source: LogSource;
-	error: Error;
-	timestamp: number;
 }
 
 export interface LogStream {

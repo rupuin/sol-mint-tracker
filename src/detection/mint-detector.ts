@@ -1,9 +1,6 @@
 import { EventEmitter } from "node:events";
-import type {
-	LogReceived,
-	LogStream,
-	StreamFailed,
-} from "../providers/index.ts";
+import type { LogStream } from "../providers/types.ts";
+import type { LogReceived, StreamFailed } from "../types.ts";
 import type { Launchpad } from "./launchpad-registry.ts";
 import type {
 	DetectionFailed,
