@@ -9,7 +9,7 @@ describe("LinkedQueue", () => {
 		let queue: Queue<number>;
 
 		beforeEach(() => {
-			queue = createQueue();
+			queue = createQueue<number>();
 			queue.enqueue(1);
 			queue.enqueue(2);
 			queue.enqueue(3);
@@ -37,7 +37,7 @@ describe("LinkedQueue", () => {
 		let queue: Queue<string>;
 
 		beforeEach(() => {
-			queue = createQueue(maxSize);
+			queue = createQueue<string>(maxSize);
 			queue.enqueue("a");
 			queue.enqueue("b");
 		});
@@ -56,7 +56,11 @@ describe("LinkedQueue", () => {
 	});
 
 	describe("when empty", () => {
-		const queue = createQueue();
+		let queue: Queue<unknown>;
+
+		beforeEach(() => {
+			queue = createQueue<unknown>();
+		});
 
 		it("returns undefined on dequeue", () => {
 			expect(queue.dequeue()).toBeUndefined();
@@ -78,7 +82,7 @@ describe("LinkedQueue", () => {
 			queue.enqueue(11);
 
 			queue.clear();
-			expect(queue.peek()).toBeNull;
+			expect(queue.peek()).toBeUndefined;
 			expect(queue.isEmpty()).toBe(true);
 		});
 	});

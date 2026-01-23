@@ -1,5 +1,5 @@
 export interface Queue<T> {
-	enqueue(item: T): boolean;
+	enqueue(item: T): boolean | never;
 	dequeue(): T | undefined;
 	peek(): T | undefined;
 	isEmpty(): boolean;
