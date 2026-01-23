@@ -1,11 +1,22 @@
-// Events
+// Shared types
+
+// Detection
 export type {
 	DetectionFailed,
-	EnrichmentFailed,
 	MintDetected,
-	MintEnriched,
-} from "./events.ts";
+	MintDetectionEmitter,
+} from "./detection/index.ts";
+export {
+	Launchpad,
+	LaunchpadRegistry,
+	MintDetector,
+} from "./detection/index.ts";
 
-export type { LaunchpadRegistry } from "./launchpad-registry.ts";
-export { MintDetector } from "./mint-detector.ts";
-export { MintEnricher } from "./mint-enricher.ts";
+// Enrichment
+export type {
+	EnrichmentFailed,
+	MintEnriched,
+	MintEnrichmentEmitter,
+} from "./enrichment/index.ts";
+export { MintEnricher } from "./enrichment/index.ts";
+export type { Token } from "./types.ts";

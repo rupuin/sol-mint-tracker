@@ -1,5 +1,8 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { Launchpad, LaunchpadRegistry } from "../src/launchpad-registry.ts";
+import {
+	Launchpad,
+	LaunchpadRegistry,
+} from "../../src/detection/launchpad-registry.ts";
 
 describe("LaunchpadRegistry", () => {
 	const lp1 = new Launchpad("launch1", "addr1", "Instruction: Create");

@@ -1,3 +1,8 @@
+import type { Token } from "../types.ts";
+
+// Re-export Token for provider implementations
+export type { Token };
+
 // ============================================
 // Shared Types
 // ============================================
@@ -6,14 +11,6 @@ export type Commitment = "processed" | "confirmed" | "finalized";
 export interface LogSource {
 	readonly name: string;
 	readonly address: string;
-}
-
-export interface Token {
-	mint: string;
-	name: string;
-	symbol: string;
-	image?: string;
-	supply?: string;
 }
 
 // ============================================

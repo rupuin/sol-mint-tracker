@@ -1,13 +1,16 @@
 import { EventEmitter } from "node:events";
 import { beforeEach, describe, expect, it } from "vitest";
-import type { DetectionFailed, MintDetected } from "../src/events.ts";
-import { Launchpad } from "../src/launchpad-registry.ts";
-import { MintDetector } from "../src/mint-detector.ts";
+import {
+	type DetectionFailed,
+	Launchpad,
+	type MintDetected,
+	MintDetector,
+} from "../../src/detection/index.ts";
 import type {
 	LogReceived,
 	LogSource,
 	StreamFailed,
-} from "../src/providers/index.ts";
+} from "../../src/providers/index.ts";
 
 function logReceived(overrides: {
 	source: LogSource;
