@@ -20,14 +20,14 @@ launchpads.add(
 	new Launchpad(
 		"PumpFun",
 		"6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P",
-		"Instruction: InitializeMint",
+		"Instruction: CreateV2",
 	),
 );
 launchpads.add(
 	new Launchpad(
 		"Raydium LaunchLab",
 		"LanMV9sAd7wArD4vJFi2qDdfnVhFxYSUg6eADduJ3uj",
-		"Instruction: InitializeMint",
+		"Instruction: InitializeMint2",
 	),
 );
 
