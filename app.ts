@@ -1,6 +1,9 @@
 import dotenv from "dotenv";
+import {
+	Launchpad,
+	LaunchpadRegistry,
+} from "./src/detection/launchpad-registry.ts";
 import { MintDetector, MintEnricher } from "./src/index.ts";
-import { Launchpad, LaunchpadRegistry } from "./src/launchpad-registry.ts";
 import { createHeliusProvider } from "./src/providers/index.ts";
 
 dotenv.config();

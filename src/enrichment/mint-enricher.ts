@@ -1,10 +1,11 @@
 import { EventEmitter } from "node:events";
-import type { EnrichmentFailed, MintDetected, MintEnriched } from "./events.ts";
+import type { MintDetected, MintDetectionEmitter } from "../detection/types.ts";
+import type { TokenFetcher } from "../providers/index.ts";
 import type {
-	MintDetectionEmitter,
+	EnrichmentFailed,
+	MintEnriched,
 	MintEnrichmentEmitter,
-} from "./interfaces.ts";
-import type { TokenFetcher } from "./providers/index.ts";
+} from "./types.ts";
 
 export class MintEnricher
 	extends EventEmitter

@@ -1,12 +1,15 @@
 import { EventEmitter } from "node:events";
-import type { DetectionFailed, MintDetected } from "./events.ts";
-import type { MintDetectionEmitter } from "./interfaces.ts";
-import type { Launchpad } from "./launchpad-registry.ts";
 import type {
 	LogReceived,
 	LogStream,
 	StreamFailed,
-} from "./providers/index.ts";
+} from "../providers/index.ts";
+import type { Launchpad } from "./launchpad-registry.ts";
+import type {
+	DetectionFailed,
+	MintDetected,
+	MintDetectionEmitter,
+} from "./types.ts";
 
 export class MintDetector extends EventEmitter implements MintDetectionEmitter {
 	private launchpads: Map<string, Launchpad>;

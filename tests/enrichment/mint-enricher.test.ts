@@ -2,12 +2,14 @@ import { EventEmitter } from "node:events";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type {
 	DetectionFailed,
-	EnrichmentFailed,
 	MintDetected,
-	MintEnriched,
-} from "../src/events.ts";
-import { MintEnricher } from "../src/mint-enricher.ts";
-import type { Token, TokenFetcher } from "../src/providers/index.ts";
+} from "../../src/detection/index.ts";
+import {
+	type EnrichmentFailed,
+	type MintEnriched,
+	MintEnricher,
+} from "../../src/enrichment/index.ts";
+import type { Token, TokenFetcher } from "../../src/providers/index.ts";
 
 function mockDetector() {
 	return new EventEmitter() as EventEmitter & {
