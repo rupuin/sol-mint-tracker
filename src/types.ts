@@ -1,13 +1,10 @@
 /**
- * Shared type contracts.
- * This file must have NO internal imports to avoid circular dependencies.
- * Both domain and infrastructure modules depend on these abstractions.
+ * Shared type contracts (between providers and enrichers).
+ * NB! No internal imports here to avoid circular dependencies.
  */
 
 /**
- * Domain representation of a token.
- * Providers map their API responses to this interface.
- * Fields may grow as more providers contribute metadata.
+ * Representation of a token.
  */
 export interface Token {
 	mint: string;
@@ -15,7 +12,7 @@ export interface Token {
 	symbol: string;
 	image?: string;
 	supply?: string;
-	// Future fields from additional providers:
+	// fields for future:
 	// description?: string;
 	// website?: string;
 	// socials?: { twitter?: string; telegram?: string };
