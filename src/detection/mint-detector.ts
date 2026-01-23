@@ -1,9 +1,5 @@
 import { EventEmitter } from "node:events";
-import type {
-	LogReceived,
-	LogStream,
-	StreamFailed,
-} from "../providers/index.ts";
+import type { LogReceived, StreamFailed } from "../types.ts";
 import type { Launchpad } from "./launchpad-registry.ts";
 import type {
 	DetectionFailed,
@@ -19,12 +15,7 @@ export class MintDetector extends EventEmitter implements MintDetectionEmitter {
 		this.launchpads = new Map(launchpads.map((l) => [l.name, l]));
 	}
 
-	listenTo(logStream: LogStream): void {
-		logStream.on("log", (e) => this.handleLog(e));
-		logStream.on("error", (e) => this.handleError(e));
-	}
-
-	private handleLog(e: LogReceived): void {
+	handleLog(e: LogReceived): void {
 		const launchpad = this.launchpads.get(e.source.name);
 		if (!launchpad) return;
 
@@ -37,7 +28,7 @@ export class MintDetector extends EventEmitter implements MintDetectionEmitter {
 		}
 	}
 
-	private handleError(e: StreamFailed): void {
+	handleError(e: StreamFailed): void {
 		this.emit("error", {
 			launchpad: e.source.name,
 			error: e.error,

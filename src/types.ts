@@ -1,7 +1,34 @@
 /**
- * Shared type contracts (between providers and enrichers).
+ * Shared type contracts.
  * NB! No internal imports here to avoid circular dependencies.
  */
+
+// ============================================
+// Log Contracts (providers ↔ detection)
+// ============================================
+
+export interface LogSource {
+	readonly name: string;
+	readonly address: string;
+}
+
+export interface LogReceived {
+	source: LogSource;
+	signature: string;
+	logs: string[];
+	timestamp: number;
+}
+
+export interface StreamFailed {
+	context: "subscription" | "stream";
+	source: LogSource;
+	error: Error;
+	timestamp: number;
+}
+
+// ============================================
+// Token Contracts (providers ↔ enrichment)
+// ============================================
 
 /**
  * Representation of a token.

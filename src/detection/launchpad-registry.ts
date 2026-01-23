@@ -1,4 +1,4 @@
-import type { LogSource } from "../providers/index.ts";
+import type { LogSource } from "../types.ts";
 
 /**
  * Launchpad configuration with mint detection pattern
