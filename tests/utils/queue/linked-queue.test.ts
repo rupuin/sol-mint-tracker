@@ -1,4 +1,4 @@
-import { describe, beforeEach, it, expect } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 import { LinkedQueue } from "../../../src/utils/queue/linked-queue.ts";
 import type { Queue } from "../../../src/utils/queue/types.ts";
 
