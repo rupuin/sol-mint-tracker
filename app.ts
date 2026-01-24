@@ -3,8 +3,9 @@ import {
 	Launchpad,
 	LaunchpadRegistry,
 } from "./src/detection/launchpad-registry.ts";
-import { MintDetector, MintEnricher } from "./src/index.ts";
+import { MintDetector, MintEnricher, type MintDetected } from "./src/index.ts";
 import { createHeliusProvider } from "./src/providers/index.ts";
+import { AsyncQueueProcessor } from "./src/utils/queue/async-queue-processor.ts";
 
 dotenv.config();
 
@@ -40,13 +41,36 @@ const tokenFetcher = helius.createTokenFetcher();
 const detector = new MintDetector(launchpads.all());
 const enricher = new MintEnricher(tokenFetcher);
 
+const queue = new AsyncQueueProcessor(
+	(item) => enricher.handleDetection(item as MintDetected),
+	{ concurrency: 2 },
+);
+
 logStream.on("log", (e) => detector.handleLog(e));
 logStream.on("error", (e) => detector.handleError(e));
 
-detector.on("detected", async (e) => await enricher.handleDetection(e));
+detector.on("detected", (e) => queue.enqueue(e));
 detector.on("error", (e) => console.error(e));
 
-enricher.on("enriched", (e) => console.log(JSON.stringify(e, null, 2)));
+enricher.on("enriched", (e) => console.log(e));
 enricher.on("error", (e) => console.error(e));
 
+queue.start();
 logStream.start();
+
+// shutdown
+process.on("SIGINT", async () => {
+	console.log("\nShutting down...");
+	logStream.stop();
+	queue.stop();
+	await queue.drain();
+	process.exit(0);
+});
+
+process.on("SIGTERM", async () => {
+	console.log("\nShutting down...");
+	logStream.stop();
+	queue.stop();
+	await queue.drain();
+	process.exit(0);
+});
