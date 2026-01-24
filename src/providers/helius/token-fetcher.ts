@@ -46,7 +46,7 @@ export class HeliusTokenFetcher implements TokenFetcher {
 
 		return {
 			mint: asset.id,
-			name: asset.content?.metadata?.name ?? "Unknown",
+			name: asset.content?.metadata?.name ?? "[no name]",
 			symbol: asset.content?.metadata?.symbol ?? "???",
 			image: asset.content?.links?.image,
 			supply: asset.token_info?.supply?.toString(),
