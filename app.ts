@@ -43,13 +43,10 @@ const enricher = new MintEnricher(tokenFetcher);
 logStream.on("log", (e) => detector.handleLog(e));
 logStream.on("error", (e) => detector.handleError(e));
 
-enricher.listenTo(detector);
-
-detector.on("detected", (e) => console.log("Detected:", e.signature));
+detector.on("detected", async (e) => await enricher.handleDetection(e));
 detector.on("error", (e) => console.error(e));
-enricher.on("enriched", (e) =>
-	console.log("Enriched:", JSON.stringify(e.token, null, 2)),
-);
+
+enricher.on("enriched", (e) => console.log(JSON.stringify(e, null, 2)));
 enricher.on("error", (e) => console.error(e));
 
 logStream.start();
