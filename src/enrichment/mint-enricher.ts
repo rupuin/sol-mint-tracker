@@ -1,5 +1,5 @@
 import { EventEmitter } from "node:events";
-import type { MintDetected, MintDetectionEmitter } from "../detection/types.ts";
+import type { MintDetected } from "../detection/types.ts";
 import type { TokenFetcher } from "../providers/index.ts";
 import type {
 	EnrichmentFailed,
@@ -18,15 +18,13 @@ export class MintEnricher
 		this.fetcher = fetcher;
 	}
 
-	listenTo(source: MintDetectionEmitter): void {
-		source.on("detected", (e) => this.handleDetection(e));
-		source.on("error", (e) => this.emit("error", e));
-	}
-
-	private async handleDetection(e: MintDetected): Promise<void> {
+	async handleDetection(e: MintDetected): Promise<void> {
 		try {
 			const token = await this.fetcher.fetchBySignature(e.signature);
-			if (!token) return;
+			if (!token) {
+				console.error("[MintEnricher] no token fetched, silently continuing");
+				return;
+			}
 
 			this.emit("enriched", {
 				launchpad: e.launchpad,
