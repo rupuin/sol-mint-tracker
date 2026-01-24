@@ -1,4 +1,3 @@
-import type { DetectionFailed } from "../detection/types.ts";
 import type { Token } from "../types.ts";
 
 // Re-export Token for module consumers
@@ -29,8 +28,5 @@ export interface EnrichmentFailed {
  */
 export interface MintEnrichmentEmitter {
 	on(event: "enriched", listener: (e: MintEnriched) => void): this;
-	on(
-		event: "error",
-		listener: (e: DetectionFailed | EnrichmentFailed) => void,
-	): this;
+	on(event: "error", listener: (e: EnrichmentFailed) => void): this;
 }

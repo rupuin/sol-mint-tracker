@@ -63,7 +63,7 @@ export class AsyncQueueProcessor<T> implements QueueProcessor<T> {
 					this.activeProcessCount++;
 					await this.handler(item);
 				} catch (err) {
-					console.log("Queue item handler error:", err);
+					console.error("Queue item handler error:", err);
 				} finally {
 					this.activeProcessCount--;
 				}
