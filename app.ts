@@ -40,7 +40,9 @@ const tokenFetcher = helius.createTokenFetcher();
 const detector = new MintDetector(launchpads.all());
 const enricher = new MintEnricher(tokenFetcher);
 
-detector.listenTo(logStream);
+logStream.on("log", (e) => detector.handleLog(e));
+logStream.on("error", (e) => detector.handleError(e));
+
 enricher.listenTo(detector);
 
 detector.on("detected", (e) => console.log("Detected:", e.signature));
