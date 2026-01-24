@@ -3,7 +3,7 @@ import {
 	Launchpad,
 	LaunchpadRegistry,
 } from "./src/detection/launchpad-registry.ts";
-import { MintDetector, MintEnricher, type MintDetected } from "./src/index.ts";
+import { type MintDetected, MintDetector, MintEnricher } from "./src/index.ts";
 import { createHeliusProvider } from "./src/providers/index.ts";
 import { AsyncQueueProcessor } from "./src/utils/queue/async-queue-processor.ts";
 
